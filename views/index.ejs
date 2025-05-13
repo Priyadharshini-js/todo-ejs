@@ -13,12 +13,12 @@
         <h1 class="title">todos</h1>
         <div class="todo-container">
             <header>
-                <form action="/add" method="post">
-                    <div class="input-wrapper">
-                        <img src="/images/expand-arrow.png" alt="expand-arrow" width="45px">
-                        <input type="text" name="todo" placeholder="Add todo!">
-                    </div>
-                </form>
+                <!-- <form action="/add" method="post"> -->
+                <div class="input-wrapper">
+                    <img src="/images/expand-arrow.png" alt="expand-arrow" width="45px">
+                    <input type="text" id="todo-input" name="todo" placeholder="Add todo!" data-filter="<%= filter %>">
+                </div>
+                <!-- </form> -->
             </header>
             <main>
                 <ul class="todo-list">
@@ -27,7 +27,7 @@
                             <div class="view">
                                 <div class="label-wrapper">
                                     <input class="toggle" type="checkbox" id="todo-<%= todo.id %>"
-                                        data-id="<%= todo.id %>" <%=todo.completed ? 'checked' : '' %>>
+                                        data-id="<%= todo.id %>"> <!-- <%=todo.completed ? 'checked' : '' %> -->
                                     <label for="todo-<%= todo.id %>">
                                         <%= todo.text %>
                                     </label>
@@ -48,7 +48,7 @@
                     </span>
                     <ul class="filters">
                         <li>
-                            <a class="<%= filter === 'all' ? 'selected' : '' %>" href="/?filter=all">All</a>
+                            <a href="/?filter=all" class="<%= filter === 'all' ? 'selected' : '' %>">All</a>
                         </li>
                         <li>
                             <a href="/?filter=active" class="<%= filter === 'active' ? 'selected' : '' %>">Active</a>
@@ -74,7 +74,6 @@
         input.focus();
 
         updateClearCompletedVisibility();
-        // checkIfNoTodos();
     });
 
     // function to update items left count
@@ -91,25 +90,6 @@
         ClearCompletedButton.style.visibility = anyCompleted ? 'visible' : 'hidden';
     }
 
-
-    // function checkIfNoTodos() {
-    //     const noOfTodos = [...document.querySelectorAll('.todo-list li')].length;
-    //     const footerDiv = document.querySelector('.todo-footer');
-
-    //     if (noOfTodos === 0) {
-    //         footerDiv.style.display = 'none';
-    //     } else {
-    //         footerDiv.style.display = 'block';
-    //     }
-    // }
-
-
-
-    //funtion to hide the footer
-    // function hideFooterVisibility() {
-    //     const footerDiv = document.querySelector('.todo-footer');
-    //     footerDiv.style.display = 'none';
-    // }
 
     //toggle checkbox
     document.querySelectorAll('.toggle').forEach(checkbox => {
@@ -128,7 +108,6 @@
                     } else {
                         updateClearCompletedVisibility();
                         updateItemsLeft();
-                        // checkIfNoTodos();
                     }
                 })
                 .catch(error => {
@@ -136,6 +115,36 @@
                 });
         });
     });
+
+    //add todo
+    document.getElementById('todo-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            const todoText = this.value.trim();
+            const filter = this.dataset.filter;
+
+            if (todoText === '') return;
+
+            fetch('/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    todo: todoText,
+                    filter: filter
+                })
+            })
+                .then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    } else {
+                        alert('Failed to add todo.');
+                    }
+                })
+                .catch(err => console.error('Error while adding todo:', err));
+        }
+    });
+
 
     //delete single todo
     document.querySelectorAll('.close-btn').forEach(button => {
@@ -175,8 +184,6 @@
                 console.error('Error while clearing completed todos:', error);
             });
     });
-
 </script>
-
 
 </html>

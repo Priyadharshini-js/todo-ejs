@@ -13,10 +13,11 @@ let todos = [];
 let idCounter = 0;
 app.post('/add', (req, res) => {
     const todo = req.body.todo;
+    const filter = req.body.filter || 'all';
     if (todo) {
         todos.push({ id: idCounter++, text: todo, completed: false });
     }
-    res.redirect('/');
+    res.redirect('/?filter=' + filter);
 })
 
 app.post('/toggle/:id', (req, res) => {
@@ -39,7 +40,6 @@ app.get('/', (req, res) => {
     }
 
     const itemsLeft = todos.filter(todo => !todo.completed).length;
-    // console.log('itemsLeft:', itemsLeft)
 
     res.render('index', {
         todos: filteredTodos,
