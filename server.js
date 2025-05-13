@@ -17,6 +17,7 @@ app.post('/add', (req, res) => {
     if (todo) {
         todos.push({ id: idCounter++, text: todo, completed: false });
     }
+  
     res.redirect('/?filter=' + filter);
 })
 
@@ -26,7 +27,8 @@ app.post('/toggle/:id', (req, res) => {
     if (todo) {
         todo.completed = !todo.completed; //toggles the completed status
     }
-    res.sendStatus(200);
+    const itemsLeft = todos.filter(todo => !todo.completed).length;
+    res.json({ itemsLeft });
 });
 
 app.get('/', (req, res) => {

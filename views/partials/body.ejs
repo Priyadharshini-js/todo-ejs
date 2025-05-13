@@ -1,0 +1,22 @@
+<!-- main template -->
+
+<main>
+    <ul class="todo-list">
+        <% todos.forEach((todo, index)=>{ %>
+            <li>
+                <div class="view">
+                    <div class="label-wrapper">
+                        <input class="toggle" type="checkbox" id="todo-<%= todo.id %>" data-id="<%= todo.id %>"
+                            <%=todo.completed ? 'checked' : '' %>>
+                        <label for="todo-<%= todo.id %>">
+                            <%= todo.text %>
+                        </label>
+                    </div>
+                    <div>
+                        <button class="close-btn" data-id="<%= todo.id %>" type="button"></button>
+                    </div>
+                </div>
+            </li>
+            <% }) %>
+    </ul>
+</main>
