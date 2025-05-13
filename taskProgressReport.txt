@@ -1,0 +1,19 @@
+Key Purpose of Ejs:
+
+EJS works by allowing us to write JavaScript(ejs tags) inside HTML. The server injects data into the template and renders a complete HTML page with dynamic content, which is then sent to the browser like a ready-made HTML page.
+        1. Ejs runs on the server.
+        2. It gets dynamic values from the backend(/api) into html template.
+        3. Then it sends the final complate html to the browser side(/client side renders).
+        4. The browser renders the ready made html template - no need js to populate the content.
+
+        cons:
+            1. not faster, need to reload for everychange.
+            2. not api friendly, like we can't change much. if we need we use(/ajax).
+
+Pure html works:
+        1. html loads first, then js loads the dynamic data(/browser).
+        2. api friendly bcz its comes as json so it takes that and builds its own HTML.
+        3. good for dynamic updates - dom will update withut reloading.
+
+        cons:
+            1. need js to render the content - without js page shows nothing. 

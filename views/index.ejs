@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>ejs template</title>
+</head>
+
+<body>
+    <section>
+        <h1 class="title">todos</h1>
+        <div class="todo-container">
+            <header>
+                <form action="/add" method="post">
+                    <div class="input-wrapper">
+                        <img src="/images/expand-arrow.png" alt="expand-arrow" width="45px">
+                        <input type="text" name="todo" placeholder="Add todo!">
+                    </div>
+                </form>
+            </header>
+            <main>
+                <ul class="todo-list">
+                    <% todos.forEach((todo, index)=>{ %>
+                        <li>
+                            <div class="view">
+                                <div class="label-wrapper">
+                                    <input class="toggle" type="checkbox" id="todo-<%= todo.id %>"
+                                        data-id="<%= todo.id %>" <%=todo.completed ? 'checked' : '' %>>
+                                    <label for="todo-<%= todo.id %>">
+                                        <%= todo.text %>
+                                    </label>
+                                </div>
+                                <div>
+                                    <button class="close-btn" data-id="<%= todo.id %>" type="button"></button>
+                                </div>
+                            </div>
+                        </li>
+                        <% }) %>
+                </ul>
+            </main>
+            <footer class="todo-footer">
+                <div class="footer-div">
+                    <span class="todo-count">
+                        <%= itemsLeft %>
+                            items left
+                    </span>
+                    <ul class="filters">
+                        <li>
+                            <a class="<%= filter === 'all' ? 'selected' : '' %>" href="/?filter=all">All</a>
+                        </li>
+                        <li>
+                            <a href="/?filter=active" class="<%= filter === 'active' ? 'selected' : '' %>">Active</a>
+                        </li>
+                        <li>
+                            <a href="/?filter=completed"
+                                class="<%= filter === 'completed' ? 'selected' : '' %>">Completed</a>
+                        </li>
+                    </ul>
+                    <button class="clear-completed" type="button">Clear completed</button>
+                </div>
+            </footer>
+        </div>
+    </section>
+</body>
+
+<script>
+
+    // On page load, show/hide clear button and update items left
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const input = document.querySelector('input[name="todo"]');
+        input.focus();
+
+        updateClearCompletedVisibility();
+        // checkIfNoTodos();
+    });
+
+    // function to update items left count
+    function updateItemsLeft() {
+        const itemsLeftCount = [...document.querySelectorAll('.toggle')].filter(cb => !cb.checked).length;
+        const todoCountSpan = document.querySelector('.todo-count');
+        todoCountSpan.textContent = `${itemsLeftCount} item${itemsLeftCount !== 1 ? 's' : ''} left`;
+    }
+
+    // function to update clear completed button visibility
+    function updateClearCompletedVisibility() {
+        const anyCompleted = [...document.querySelectorAll('.toggle')].some(cb => cb.checked);
+        const ClearCompletedButton = document.querySelector('.clear-completed');
+        ClearCompletedButton.style.visibility = anyCompleted ? 'visible' : 'hidden';
+    }
+
+
+    // function checkIfNoTodos() {
+    //     const noOfTodos = [...document.querySelectorAll('.todo-list li')].length;
+    //     const footerDiv = document.querySelector('.todo-footer');
+
+    //     if (noOfTodos === 0) {
+    //         footerDiv.style.display = 'none';
+    //     } else {
+    //         footerDiv.style.display = 'block';
+    //     }
+    // }
+
+
+
+    //funtion to hide the footer
+    // function hideFooterVisibility() {
+    //     const footerDiv = document.querySelector('.todo-footer');
+    //     footerDiv.style.display = 'none';
+    // }
+
+    //toggle checkbox
+    document.querySelectorAll('.toggle').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const id = this.dataset.id;
+            const ClearCompletedButton = document.querySelector('.clear-completed');
+            ClearCompletedButton.style.visibility = 'hidden';
+
+            fetch(`/toggle/${id}`, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        alert('Failed to update todo status.');
+
+                    } else {
+                        updateClearCompletedVisibility();
+                        updateItemsLeft();
+                        // checkIfNoTodos();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
+
+    //delete single todo
+    document.querySelectorAll('.close-btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const id = this.dataset.id;
+
+            fetch(`/delete/${id}`, {
+                method: 'DELETE'
+            })
+                .then(res => {
+                    if (res.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete todo.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error while deleting todo:', error);
+                });
+        });
+    });
+
+    // Clear completed todos
+    document.querySelector('.clear-completed').addEventListener('click', function () {
+        fetch('/clear-completed', {
+            method: 'DELETE'
+        })
+            .then(res => {
+                if (res.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to clear completed todos.');
+                }
+            })
+            .catch(error => {
+                console.error('Error while clearing completed todos:', error);
+            });
+    });
+
+</script>
+
+
+</html>
