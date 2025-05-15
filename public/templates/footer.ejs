@@ -1,0 +1,24 @@
+<!-- //footer template -->
+
+<footer class="todo-footer">
+    <div class="footer-div">
+        <span class="todo-count">
+            <%= itemsLeft %> item<%= itemsLeft !==1 ? 's' : '' %> left
+        </span>
+        <ul class="filters">
+            <li>
+                <a href="/?filter=all" data-filter="all" class="<%= filter === 'all' ? 'selected' : '' %>">All</a>
+            </li>
+            <li>
+                <a href="/?filter=active" data-filter="active"
+                    class="<%= filter === 'active' ? 'selected' : '' %>">Active</a>
+            </li>
+            <li>
+                <a href="/?filter=completed" data-filter="completed"
+                    class="<%= filter === 'completed' ? 'selected' : '' %>">Completed</a>
+            </li>
+        </ul>
+        <button class="clear-completed <%= allTodos.filter(todo => todo.completed).length > 0 ? 'visible' : 'hidden' %>"
+            type="button">Clear completed</button>
+    </div>
+</footer>

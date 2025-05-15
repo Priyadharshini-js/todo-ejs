@@ -5,20 +5,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <title>ejs template</title>
+    <title>Todo template with ejs</title>
 </head>
 
 <body>
     <section>
         <h1 class="title">todos</h1>
         <div class="todo-container">
-            <%- include('partials/header.ejs') %>
-                <%- include('partials/body.ejs') %>
-                    <%- include('partials/footer.ejs') %>
+            <!-- header -->
+            <div class="todo-header"></div>
+
+            <!-- todo list -->
+            <ul class="todo-list"></ul>
+
+            <!-- footer -->
+            <div class="todo-footer"></div>
         </div>
     </section>
 </body>
 
 <script src="/script/todoApp.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ejs@3.1.9/ejs.min.js"></script>
 
 </html>

@@ -1,24 +1,26 @@
 const express = require('express');
-const app = express();
-const bodyParser = require('body-parser'); //middleware
+const path = require('path');
 
-app.set('view engine', 'ejs');
+const app = express();
+
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true })); //conttent type, gets the value form the form
+app.use('/templates', express.static(path.join(__dirname, 'public', 'templates')));  // Serve templates from the templates folder inside public
+app.use(express.json()); //conttent type, gets the value form the form
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
 
 
 let todos = [];
-
-
 let idCounter = 0;
+
 app.post('/add', (req, res) => {
     const todo = req.body.todo;
-    const filter = req.body.filter || 'all';
     if (todo) {
         todos.push({ id: idCounter++, text: todo, completed: false });
     }
-  
-    res.redirect('/?filter=' + filter);
+    res.json({ success: true });
 })
 
 app.post('/toggle/:id', (req, res) => {
@@ -31,7 +33,7 @@ app.post('/toggle/:id', (req, res) => {
     res.json({ itemsLeft });
 });
 
-app.get('/', (req, res) => {
+app.get('/todos', (req, res) => {
     const filter = req.query.filter || 'all';
     let filteredTodos = todos;
 
@@ -43,11 +45,7 @@ app.get('/', (req, res) => {
 
     const itemsLeft = todos.filter(todo => !todo.completed).length;
 
-    res.render('index', {
-        todos: filteredTodos,
-        filter,
-        itemsLeft
-    });
+    res.json({ todos: filteredTodos, filter, itemsLeft, allTodos: todos });
 });
 
 

@@ -25,6 +25,14 @@ li {
 
 }
 
+.hidden {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}
+
 .todo-container {
     background: #fff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .2), 0 25px 50px 0 rgba(0, 0, 0, .1);
@@ -109,8 +117,8 @@ li {
     width: 100%;
     box-sizing: border-box;
     font-size: 14px;
-    padding: 10px 15px;
-    height: 40px;
+    padding: 5px 15px;
+    /* height: 40px; */
 }
 
 .todo-container .todo-footer .footer-div {
@@ -136,7 +144,7 @@ li {
 }
 
 .todo-container .todo-footer button.clear-completed {
-    visibility: hidden;
+    /* visibility: hidden; */
     border: none;
     background: unset;
     text-align: right;

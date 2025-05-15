@@ -17,3 +17,19 @@ Pure html works:
 
         cons:
             1. need js to render the content - without js page shows nothing. 
+
+Being in component:
+
+pros:
+    1. Fast, use script tags inside the html to render ejs, since the template is already loaded in the dom. (iniline template ie.rendering templates in html)
+    2. Templates are modular and maintainable (easier to reuse)(fetches template from an external file)
+    3. cleaner html(fetches template from an external file)
+
+Cons:
+    1. Doesn't scalable.(iniline template)
+    2. Request network to load the template(fetches template from an external file)
+    3. need props handling(fetches template from an external file)
+
+
+    For Server side rendering - use view engine,
+    For Client side rendering - ejs.render/ sendfile with path name
